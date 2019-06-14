@@ -24,12 +24,11 @@ RUN docker-php-ext-configure intl --enable-intl \
     && pecl install sqlsrv \
     && pecl install pdo_sqlsrv-5.6.1 \
     && docker-php-ext-enable sqlsrv pdo_sqlsrv \
-	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install -j$(nproc) gd
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
 
-RUN apt-get install -y \
-         zlib1g-dev \
-         && docker-php-ext-install zip
+#RUN apt-get install -y zlib1g-dev \
+#    && docker-php-ext-install zip
 
 # TimeZone
 RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime \
@@ -38,7 +37,6 @@ RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime \
 # Install Composer && Assets Plugin
 RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin --filename=composer \
 && composer global require --no-progress "fxp/composer-asset-plugin:~1.4" \
-#&& apk del tzdata \
 && rm -rf /var/cache/apk/*
 
 EXPOSE 9000
