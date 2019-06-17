@@ -30,7 +30,7 @@ RUN docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-install -j$(nproc) gd
 
 RUN docker-php-ext-configure zip --with-libzip \
-    && docker-php-ext-install zip \
+    && docker-php-ext-install zip
 
 # TimeZone
 RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime \
