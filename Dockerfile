@@ -17,7 +17,9 @@ RUN apt-get update && apt-get install -y autoconf tzdata openntpd file g++ git g
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
-    libssl-dev
+    libssl-dev \
+    libzip-dev \
+    unzip
 
 RUN docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-install -j$(nproc) iconv mysqli pdo pdo_mysql curl bcmath mbstring json xml opcache intl soap \
@@ -27,8 +29,8 @@ RUN docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
 
-#RUN apt-get install -y zlib1g-dev \
-#    && docker-php-ext-install zip
+RUN docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install zip \
 
 # TimeZone
 RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime \
