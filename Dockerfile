@@ -32,8 +32,7 @@ RUN docker-php-ext-configure intl --enable-intl \
 RUN docker-php-ext-configure zip --with-libzip \
     && docker-php-ext-install zip
 
-RUN dpkg -l cron \
-	&& apt-get install cron
+RUN apt-get install cron
 
 # TimeZone
 RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime \
