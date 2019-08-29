@@ -17,15 +17,20 @@ RUN apt-get update && apt-get install -y autoconf tzdata openntpd file g++ git g
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
-    libssl-dev
+    libssl-dev \
+    libzip-dev \
+    unzip
 
 RUN docker-php-ext-configure intl --enable-intl \
-    && docker-php-ext-install -j$(nproc) iconv mysqli pdo pdo_mysql curl bcmath mbstring json xml zip opcache intl soap \
+    && docker-php-ext-install -j$(nproc) iconv mysqli pdo pdo_mysql curl bcmath mbstring json xml opcache intl soap \
     && pecl install sqlsrv \
-    && pecl install pdo_sqlsrv-5.2.0 \
+    && pecl install pdo_sqlsrv-5.6.1 \
     && docker-php-ext-enable sqlsrv pdo_sqlsrv \
-	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install -j$(nproc) gd
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
+
+RUN docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install zip
 
 RUN dpkg -l cron \
 	&& apt-get install cron
@@ -37,7 +42,6 @@ RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime \
 # Install Composer && Assets Plugin
 RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin --filename=composer \
 && composer global require --no-progress "fxp/composer-asset-plugin:~1.4" \
-#&& apk del tzdata \
 && rm -rf /var/cache/apk/*
 
 EXPOSE 9000
